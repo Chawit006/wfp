@@ -1,0 +1,153 @@
+{% extends 'public/layout.html' %}
+{% block title %}Match History{% endblock %}
+
+{% block content %}
+<div class="pub-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  <!-- Header -->
+  <div class="mb-10">
+    <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-[0.25em] mb-2">Live Results</div>
+    <h1 class="font-display font-bold text-4xl sm:text-5xl text-white tracking-tight">Match History</h1>
+    <p class="text-slate-500 text-sm mt-2">{{ total }} match records</p>
+  </div>
+
+  <!-- Filters -->
+  <form method="GET" action="{{ url_for('pub_matches') }}" class="flex flex-wrap gap-3 mb-8">
+    <!-- Result filter -->
+    <div class="flex gap-2">
+      <a href="{{ url_for('pub_matches', team_id=team_filter) }}"
+         class="text-xs font-semibold px-4 py-2.5 rounded-xl border transition-all
+                {% if not result_filter %}bg-white/8 border-white/15 text-slate-200{% else %}bg-white/3 border-white/8 text-slate-500 hover:bg-white/6 hover:text-slate-300{% endif %}">
+        All
+      </a>
+      <a href="{{ url_for('pub_matches', result='WIN', team_id=team_filter) }}"
+         class="text-xs font-semibold px-4 py-2.5 rounded-xl border transition-all
+                {% if result_filter == 'WIN' %}bg-emerald-500/15 border-emerald-500/30 text-emerald-300{% else %}bg-white/3 border-white/8 text-slate-500 hover:bg-emerald-500/10 hover:text-emerald-400{% endif %}">
+        Win
+      </a>
+      <a href="{{ url_for('pub_matches', result='LOSS', team_id=team_filter) }}"
+         class="text-xs font-semibold px-4 py-2.5 rounded-xl border transition-all
+                {% if result_filter == 'LOSS' %}bg-red-500/15 border-red-500/30 text-red-300{% else %}bg-white/3 border-white/8 text-slate-500 hover:bg-red-500/10 hover:text-red-400{% endif %}">
+        Loss
+      </a>
+      <a href="{{ url_for('pub_matches', result='DRAW', team_id=team_filter) }}"
+         class="text-xs font-semibold px-4 py-2.5 rounded-xl border transition-all
+                {% if result_filter == 'DRAW' %}bg-amber-500/15 border-amber-500/30 text-amber-300{% else %}bg-white/3 border-white/8 text-slate-500 hover:bg-amber-500/10 hover:text-amber-400{% endif %}">
+        Draw
+      </a>
+    </div>
+
+    <!-- Team filter -->
+    <select name="team_id" onchange="this.form.submit()"
+            class="bg-[#111130] border border-purple-900/30 text-slate-300 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-purple-500/60 transition-all">
+      <option value="">All Teams</option>
+      {% for t in all_teams %}
+        <option value="{{ t['id'] }}" {% if team_filter == t['id']|string %}selected{% endif %}>{{ t['name'] }}</option>
+      {% endfor %}
+    </select>
+    <input type="hidden" name="result" value="{{ result_filter }}">
+  </form>
+
+  <!-- Match Cards -->
+  {% if matches %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+    {% for m in matches %}
+    <div class="match-card p-5 relative overflow-hidden">
+      <!-- Result accent stripe -->
+      <div class="absolute top-0 left-0 w-1 h-full rounded-l-xl {% if m['result'] == 'WIN' %}bg-emerald-500{% elif m['result'] == 'LOSS' %}bg-red-500{% else %}bg-amber-500{% endif %}"></div>
+
+      <div class="pl-3">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-mono text-[10px] text-slate-600">{{ m['match_date'] }}</span>
+          <span class="{% if m['result'] == 'WIN' %}badge-win{% elif m['result'] == 'LOSS' %}badge-loss{% else %}badge-draw{% endif %}">{{ m['result'] }}</span>
+        </div>
+
+        <!-- Teams + Score -->
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2 flex-1 min-w-0">
+            <div class="w-7 h-7 rounded-lg bg-purple-500/15 border border-purple-500/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <img src="/static/images/teams/{{ m['team_name']|lower|replace(' ','-') }}.png"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                   class="w-full h-full object-cover" alt="{{ m['team_name'] }}">
+              <span class="hidden w-full h-full items-center justify-center font-display font-bold text-[10px] text-purple-300">{{ m['team_name'][:2]|upper }}</span>
+            </div>
+            <a href="{{ url_for('pub_team_detail', team_id=m['team_id']) }}"
+               class="font-semibold text-sm text-slate-100 hover:text-purple-300 transition-colors truncate">{{ m['team_name'] }}</a>
+          </div>
+
+          <div class="flex flex-col items-center mx-3 flex-shrink-0">
+            <span class="font-display font-bold text-xl text-white leading-none">{{ m['score'] }}</span>
+            <span class="text-[8px] text-slate-700 uppercase tracking-widest mt-0.5">score</span>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 flex-1 min-w-0">
+            <span class="font-semibold text-sm text-slate-400 truncate text-right">{{ m['opponent'] }}</span>
+            <div class="w-7 h-7 rounded-lg bg-slate-700/30 border border-slate-700/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <img src="/static/images/teams/{{ m['opponent']|lower|replace(' ','-') }}.png"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                   class="w-full h-full object-cover" alt="{{ m['opponent'] }}">
+              <span class="hidden w-full h-full items-center justify-center font-display font-bold text-[10px] text-slate-500">{{ m['opponent'][:2]|upper }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tournament + MVP -->
+        <div class="mt-3 pt-3 border-t border-white/5 space-y-1">
+          <div class="text-[10px] text-slate-700 truncate">{{ m['tournament_name'] }}</div>
+          {% if m['mvp'] %}
+          <div class="flex items-center gap-1 text-[10px] text-yellow-500/70">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            MVP: <span class="font-semibold ml-0.5">{{ m['mvp'] }}</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if total_pages > 1 %}
+  <div class="flex items-center justify-center gap-2">
+    {% if page > 1 %}
+    <a href="{{ url_for('pub_matches', page=page-1, result=result_filter, team_id=team_filter) }}"
+       class="px-4 py-2 bg-white/5 border border-white/10 text-slate-400 hover:text-slate-200 hover:bg-white/8 text-xs rounded-xl transition-all">
+      ← Prev
+    </a>
+    {% endif %}
+
+    {% for p in range(1, total_pages + 1) %}
+      {% if p == page %}
+        <span class="px-4 py-2 bg-purple-600/20 border border-purple-500/30 text-purple-300 text-xs rounded-xl font-semibold">{{ p }}</span>
+      {% elif (p <= 2) or (p >= total_pages - 1) or (p >= page - 1 and p <= page + 1) %}
+        <a href="{{ url_for('pub_matches', page=p, result=result_filter, team_id=team_filter) }}"
+           class="px-4 py-2 bg-white/4 border border-white/8 text-slate-500 hover:text-slate-200 hover:bg-white/7 text-xs rounded-xl transition-all">{{ p }}</a>
+      {% elif p == 3 or p == total_pages - 2 %}
+        <span class="text-slate-700 text-xs px-1">…</span>
+      {% endif %}
+    {% endfor %}
+
+    {% if page < total_pages %}
+    <a href="{{ url_for('pub_matches', page=page+1, result=result_filter, team_id=team_filter) }}"
+       class="px-4 py-2 bg-white/5 border border-white/10 text-slate-400 hover:text-slate-200 hover:bg-white/8 text-xs rounded-xl transition-all">
+      Next →
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="text-center py-24">
+    <div class="w-20 h-20 rounded-3xl bg-emerald-900/20 border border-emerald-900/30 flex items-center justify-center mx-auto mb-5">
+      <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+    </div>
+    <p class="text-slate-500 text-base">No matches found.</p>
+    {% if result_filter or team_filter %}
+    <a href="{{ url_for('pub_matches') }}" class="mt-2 block text-sm text-purple-400 hover:text-purple-300">Clear filters</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+{% block title %}Add Team{% endblock %}
+{% block page_title %}Add New Team{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-purple-900/15 bg-[#0a0a1e] flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600/25 to-purple-800/25 border border-purple-500/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+                <h2 class="font-semibold text-slate-200 leading-tight">Team Information</h2>
+                <p class="text-xs text-slate-600 mt-0.5">Fill in all required fields to register a new team.</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('teams_create') }}" class="px-6 py-6 space-y-5">
+
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Team Name <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="name" name="name" value="{{ form.get('name', '') }}"
+                       placeholder="e.g., Team Liquid"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Game Title -->
+            <div>
+                <label for="game_title" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Game Title <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="game_title" name="game_title" value="{{ form.get('game_title', '') }}"
+                       placeholder="e.g., CS2, Valorant, League of Legends"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Country -->
+            <div>
+                <label for="country" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Country <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="country" name="country" value="{{ form.get('country', '') }}"
+                       placeholder="e.g., United States"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Coach -->
+            <div>
+                <label for="coach" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Head Coach <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="coach" name="coach" value="{{ form.get('coach', '') }}"
+                       placeholder="e.g., zonic"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Ranking -->
+            <div>
+                <label for="ranking" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    World Ranking <span class="text-red-400">*</span>
+                </label>
+                <input type="number" id="ranking" name="ranking" value="{{ form.get('ranking', '') }}"
+                       min="1" placeholder="e.g., 1"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Sponsor -->
+            <div>
+                <label for="sponsor" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Sponsor <span class="text-slate-700 font-normal normal-case tracking-normal">(optional)</span>
+                </label>
+                <input type="text" id="sponsor" name="sponsor" value="{{ form.get('sponsor', '') }}"
+                       placeholder="e.g., Red Bull, Monster Energy"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex items-center gap-3 pt-2 border-t border-purple-900/10 mt-6">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-purple-900/30 hover:shadow-purple-900/50 hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Create Team
+                </button>
+                <a href="{{ url_for('teams_index') }}"
+                   class="inline-flex items-center gap-2 bg-white/5 hover:bg-white/8 border border-white/10 text-slate-400 hover:text-slate-200 px-6 py-2.5 rounded-lg text-sm transition-all font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% block title %}Add Tournament{% endblock %}
+{% block page_title %}Add New Tournament{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-purple-900/15 bg-[#0a0a1e] flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-600/25 to-yellow-800/25 border border-yellow-500/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div>
+                <h2 class="font-semibold text-slate-200 leading-tight">Tournament Information</h2>
+                <p class="text-xs text-slate-600 mt-0.5">Fill in all fields to register a new tournament.</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('tournaments_create') }}" class="px-6 py-6 space-y-5">
+
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Tournament Name <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="name" name="name" value="{{ form.get('name', '') }}"
+                       placeholder="e.g., ESL Pro League Season 20"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Prize Pool + Organizer -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="prize_pool" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Prize Pool (USD) <span class="text-red-400">*</span>
+                    </label>
+                    <input type="number" id="prize_pool" name="prize_pool" value="{{ form.get('prize_pool', '') }}"
+                           step="0.01" min="0" placeholder="e.g., 1000000"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all font-mono">
+                </div>
+                <div>
+                    <label for="organizer" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Organizer <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" id="organizer" name="organizer" value="{{ form.get('organizer', '') }}"
+                           placeholder="e.g., ESL Gaming"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div>
+                <label for="location" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Location <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="location" name="location" value="{{ form.get('location', '') }}"
+                       placeholder="e.g., Katowice, Poland"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Start + End dates -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="start_date" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Start Date <span class="text-red-400">*</span>
+                    </label>
+                    <input type="date" id="start_date" name="start_date" value="{{ form.get('start_date', '') }}"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+                <div>
+                    <label for="end_date" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        End Date <span class="text-red-400">*</span>
+                    </label>
+                    <input type="date" id="end_date" name="end_date" value="{{ form.get('end_date', '') }}"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex items-center gap-3 pt-2 border-t border-purple-900/10 mt-6">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-purple-900/30 hover:shadow-purple-900/50 hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Create Tournament
+                </button>
+                <a href="{{ url_for('tournaments_index') }}"
+                   class="inline-flex items-center gap-2 bg-white/5 hover:bg-white/8 border border-white/10 text-slate-400 hover:text-slate-200 px-6 py-2.5 rounded-lg text-sm transition-all font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

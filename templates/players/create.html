@@ -1,0 +1,114 @@
+{% extends 'layout.html' %}
+{% block title %}Add Player{% endblock %}
+{% block page_title %}Add New Player{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-purple-900/15 bg-[#0a0a1e] flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-600/25 to-blue-800/25 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+                <h2 class="font-semibold text-slate-200 leading-tight">Player Information</h2>
+                <p class="text-xs text-slate-600 mt-0.5">Fill in all required fields to register a new player.</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('players_create') }}" class="px-6 py-6 space-y-5">
+
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Player Name <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="name" name="name" value="{{ form.get('name', '') }}"
+                       placeholder="e.g., s1mple"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Age + Role row -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="age" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Age <span class="text-red-400">*</span>
+                    </label>
+                    <input type="number" id="age" name="age" value="{{ form.get('age', '') }}"
+                           min="14" max="60" placeholder="e.g., 25"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+                <div>
+                    <label for="role" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Role <span class="text-red-400">*</span>
+                    </label>
+                    <select id="role" name="role"
+                            class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                        <option value="">Select role...</option>
+                        {% for r in ['IGL', 'AWPer', 'Rifler', 'Support', 'Lurker', 'Sniper', 'Entry Fragger', 'Mid-laner', 'Jungler', 'ADC', 'Tank', 'Duelist', 'Sentinel', 'Controller'] %}
+                        <option value="{{ r }}" {% if form.get('role') == r %}selected{% endif %}>{{ r }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Team -->
+            <div>
+                <label for="team_id" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Team <span class="text-red-400">*</span>
+                </label>
+                <select id="team_id" name="team_id"
+                        class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                    <option value="">Select team...</option>
+                    {% for t in all_teams %}
+                    <option value="{{ t['id'] }}" {% if form.get('team_id')|string == t['id']|string %}selected{% endif %}>
+                        {{ t['name'] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- KDA + Salary row -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="kda" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        KDA Ratio <span class="text-red-400">*</span>
+                    </label>
+                    <input type="number" id="kda" name="kda" value="{{ form.get('kda', '') }}"
+                           step="0.01" min="0" placeholder="e.g., 1.85"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all font-mono">
+                </div>
+                <div>
+                    <label for="salary" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Monthly Salary (USD) <span class="text-red-400">*</span>
+                    </label>
+                    <input type="number" id="salary" name="salary" value="{{ form.get('salary', '') }}"
+                           step="0.01" min="0" placeholder="e.g., 5000.00"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all font-mono">
+                </div>
+            </div>
+
+            <!-- Join Date -->
+            <div>
+                <label for="join_date" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Join Date <span class="text-red-400">*</span>
+                </label>
+                <input type="date" id="join_date" name="join_date" value="{{ form.get('join_date', '') }}"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex items-center gap-3 pt-2 border-t border-purple-900/10 mt-6">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-purple-900/30 hover:shadow-purple-900/50 hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Add Player
+                </button>
+                <a href="{{ url_for('players_index') }}"
+                   class="inline-flex items-center gap-2 bg-white/5 hover:bg-white/8 border border-white/10 text-slate-400 hover:text-slate-200 px-6 py-2.5 rounded-lg text-sm transition-all font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

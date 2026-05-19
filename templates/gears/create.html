@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+{% block title %}Add Gear{% endblock %}
+{% block page_title %}Add New Gear Entry{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-purple-900/15 bg-[#0a0a1e] flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-600/25 to-blue-800/25 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2"/></svg>
+            </div>
+            <div>
+                <h2 class="font-semibold text-slate-200 leading-tight">Gear Setup</h2>
+                <p class="text-xs text-slate-600 mt-0.5">Assign a peripheral setup to a player.</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('gears_create') }}" class="px-6 py-6 space-y-5">
+
+            <!-- Player -->
+            <div>
+                <label for="player_id" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Player <span class="text-red-400">*</span>
+                </label>
+                <select id="player_id" name="player_id"
+                        class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                    <option value="">Select player...</option>
+                    {% for p in all_players %}
+                    <option value="{{ p['id'] }}" {% if form.get('player_id')|string == p['id']|string %}selected{% endif %}>
+                        {{ p['name'] }}{% if p['team_name'] %} ({{ p['team_name'] }}){% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Brand -->
+            <div>
+                <label for="brand" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                    Primary Brand <span class="text-red-400">*</span>
+                </label>
+                <input type="text" id="brand" name="brand" value="{{ form.get('brand', '') }}"
+                       placeholder="e.g., Logitech, Razer, SteelSeries"
+                       class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+            </div>
+
+            <!-- Mouse + Keyboard -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="mouse" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Mouse <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" id="mouse" name="mouse" value="{{ form.get('mouse', '') }}"
+                           placeholder="e.g., Logitech G Pro X Superlight"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+                <div>
+                    <label for="keyboard" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Keyboard <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" id="keyboard" name="keyboard" value="{{ form.get('keyboard', '') }}"
+                           placeholder="e.g., Logitech G Pro X"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+            </div>
+
+            <!-- Headset + Monitor -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="headset" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Headset <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" id="headset" name="headset" value="{{ form.get('headset', '') }}"
+                           placeholder="e.g., Logitech G Pro X Headset"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+                <div>
+                    <label for="monitor" class="block text-[10px] font-semibold text-slate-500 uppercase tracking-[0.14em] mb-1.5">
+                        Monitor <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" id="monitor" name="monitor" value="{{ form.get('monitor', '') }}"
+                           placeholder="e.g., BenQ XL2546K"
+                           class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex items-center gap-3 pt-2 border-t border-purple-900/10 mt-6">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-purple-900/30 hover:shadow-purple-900/50 hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Add Gear Entry
+                </button>
+                <a href="{{ url_for('gears_index') }}"
+                   class="inline-flex items-center gap-2 bg-white/5 hover:bg-white/8 border border-white/10 text-slate-400 hover:text-slate-200 px-6 py-2.5 rounded-lg text-sm transition-all font-medium">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

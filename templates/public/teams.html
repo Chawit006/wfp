@@ -1,0 +1,119 @@
+{% extends 'public/layout.html' %}
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<div class="pub-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  <!-- Header -->
+  <div class="mb-10">
+    <div class="text-[10px] text-purple-400 font-bold uppercase tracking-[0.25em] mb-2">Rankings</div>
+    <h1 class="font-display font-bold text-4xl sm:text-5xl text-white tracking-tight">Pro Teams</h1>
+    <p class="text-slate-500 text-sm mt-2">{{ teams|length }} professional esports organizations</p>
+  </div>
+
+  <!-- Teams Grid -->
+  {% if teams %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for team in teams %}
+    {% set total_t = (team['wins'] or 0) + (team['losses'] or 0) %}
+    {% set wr = ((team['wins'] or 0) / total_t * 100) | round(1) if total_t > 0 else 0 %}
+
+    <a href="{{ url_for('pub_team_detail', team_id=team['id']) }}"
+       class="group relative bg-[#0d0d24] border border-purple-900/20 rounded-2xl overflow-hidden card-glow transition-all duration-200 block">
+
+      <!-- Top gradient accent bar -->
+      <div class="h-1 w-full" style="background: linear-gradient(90deg,
+        {% if team['ranking'] == 1 %}#d97706, #f59e0b
+        {% elif team['ranking'] == 2 %}#6b7280, #9ca3af
+        {% elif team['ranking'] == 3 %}#92400e, #b45309
+        {% else %}rgba(139,92,246,0.4), rgba(6,182,212,0.3){% endif %});"></div>
+
+      <div class="p-6">
+        <!-- Header row -->
+        <div class="flex items-start justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-700/30 to-purple-900/30 border border-purple-500/15 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <img src="/static/images/teams/{{ team['name']|lower|replace(' ','-') }}.png"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                   class="w-full h-full object-cover" alt="{{ team['name'] }}">
+              <span class="hidden w-full h-full items-center justify-center font-display font-bold text-xl text-purple-300">
+                {{ team['name'][:2]|upper }}
+              </span>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-xl text-white group-hover:text-purple-200 transition-colors leading-tight">{{ team['name'] }}</h3>
+              <span class="text-xs text-purple-400 font-medium">{{ team['game_title'] }}</span>
+            </div>
+          </div>
+          <!-- Rank badge -->
+          <div class="flex-shrink-0">
+            {% if team['ranking'] == 1 %}
+              <span class="rank-badge-1 text-xs font-bold px-2.5 py-1 rounded-full">#1</span>
+            {% elif team['ranking'] == 2 %}
+              <span class="rank-badge-2 text-xs font-bold px-2.5 py-1 rounded-full">#2</span>
+            {% elif team['ranking'] == 3 %}
+              <span class="rank-badge-3 text-xs font-bold px-2.5 py-1 rounded-full">#3</span>
+            {% else %}
+              <span class="rank-badge-n text-xs font-bold px-2.5 py-1 rounded-full">#{{ team['ranking'] }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="space-y-2 mb-5">
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <svg class="w-3.5 h-3.5 text-slate-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+            <span class="text-slate-400">{{ team['country'] }}</span>
+          </div>
+          {% if team['coach'] %}
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <svg class="w-3.5 h-3.5 text-slate-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M2 20c0-4 8-8 10-8s10 4 10 8"/></svg>
+            <span class="text-slate-400">Coach: <span class="text-slate-300">{{ team['coach'] }}</span></span>
+          </div>
+          {% endif %}
+          {% if team['sponsor'] %}
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <svg class="w-3.5 h-3.5 text-slate-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <span class="text-slate-400">Sponsor: <span class="text-slate-300">{{ team['sponsor'] }}</span></span>
+          </div>
+          {% endif %}
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <svg class="w-3.5 h-3.5 text-slate-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span class="text-slate-400"><span class="text-slate-300 font-semibold">{{ team['player_count'] }}</span> players</span>
+          </div>
+        </div>
+
+        <!-- Win Rate -->
+        <div class="pt-4 border-t border-purple-900/15">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex gap-3">
+              <span class="text-xs font-bold text-emerald-400">{{ team['wins'] or 0 }}W</span>
+              <span class="text-xs font-bold text-red-400">{{ team['losses'] or 0 }}L</span>
+              {% if team['draws'] %}<span class="text-xs font-bold text-amber-400">{{ team['draws'] }}D</span>{% endif %}
+            </div>
+            <span class="font-display font-bold text-sm {% if wr >= 60 %}text-emerald-400{% elif wr >= 40 %}text-amber-400{% else %}text-red-400{% endif %}">{{ wr }}%</span>
+          </div>
+          <div class="win-bar-track">
+            <div class="win-bar-fill {% if wr >= 60 %}win-bar-high{% elif wr >= 40 %}win-bar-mid{% else %}win-bar-low{% endif %}" style="width: {{ wr }}%"></div>
+          </div>
+        </div>
+
+        <!-- Arrow hint -->
+        <div class="mt-4 flex items-center justify-end text-xs text-purple-500/50 group-hover:text-purple-400 transition-colors">
+          View roster <svg class="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-24">
+    <div class="w-20 h-20 rounded-3xl bg-purple-900/20 border border-purple-900/30 flex items-center justify-center mx-auto mb-5">
+      <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    </div>
+    <p class="text-slate-500 text-base">No teams available.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

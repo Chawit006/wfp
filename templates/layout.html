@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-Sports Manager{% endblock %} | CS104</title>
+
+    <!-- Google Fonts: Inter + Rajdhani + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            'sans':    ['Inter', 'system-ui', 'sans-serif'],
+            'display': ['Rajdhani', 'Inter', 'sans-serif'],
+            'mono':    ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            'esports': {
+              'bg':      '#07071a',
+              'surface': '#0d0d24',
+              'card':    '#111130',
+              'purple':  '#8b5cf6',
+              'cyan':    '#06b6d4',
+              'blue':    '#3b82f6',
+              'green':   '#10b981',
+              'yellow':  '#f59e0b',
+              'red':     '#ef4444',
+            }
+          }
+        }
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body class="bg-[#07071a] text-slate-200 min-h-screen flex font-sans antialiased">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="w-64 min-h-screen sidebar-bg border-r border-purple-900/20 flex flex-col fixed top-0 left-0 z-30">
+
+        <!-- Logo -->
+        <div class="px-5 py-5 border-b border-purple-900/20">
+            <a href="{{ url_for('dashboard') }}" class="flex items-center gap-3 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-purple-800 flex items-center justify-center shadow-lg shadow-purple-900/60 flex-shrink-0 group-hover:shadow-purple-700/50 transition-all duration-200">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="font-display font-bold text-lg tracking-widest text-white leading-none">E-SPORTS</div>
+                    <div class="text-[9px] text-purple-400 font-semibold tracking-[0.25em] uppercase mt-0.5">Manager</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+
+            <!-- Dashboard -->
+            <a href="{{ url_for('dashboard') }}"
+               class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                      {% if request.path == '/' %}nav-active{% else %}nav-inactive{% endif %}">
+                <span class="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 {% if request.path == '/' %}text-purple-300{% else %}text-slate-600 group-hover:text-slate-400{% endif %}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                    </svg>
+                </span>
+                Dashboard
+            </a>
+
+            <div class="pt-3 pb-1.5 px-3">
+                <span class="text-[9px] font-bold text-slate-700 uppercase tracking-[0.18em]">Management</span>
+            </div>
+
+            <!-- Teams -->
+            <a href="{{ url_for('teams_index') }}"
+               class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                      {% if request.path.startswith('/teams') %}nav-active{% else %}nav-inactive{% endif %}">
+                <span class="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 {% if request.path.startswith('/teams') %}text-purple-300{% else %}text-slate-600 group-hover:text-slate-400{% endif %}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </span>
+                Teams
+            </a>
+
+            <!-- Players -->
+            <a href="{{ url_for('players_index') }}"
+               class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                      {% if request.path.startswith('/players') %}nav-active{% else %}nav-inactive{% endif %}">
+                <span class="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 {% if request.path.startswith('/players') %}text-purple-300{% else %}text-slate-600 group-hover:text-slate-400{% endif %}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </span>
+                Players
+            </a>
+
+            <!-- Gear -->
+            <a href="{{ url_for('gears_index') }}"
+               class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                      {% if request.path.startswith('/gears') %}nav-active{% else %}nav-inactive{% endif %}">
+                <span class="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 {% if request.path.startswith('/gears') %}text-purple-300{% else %}text-slate-600 group-hover:text-slate-400{% endif %}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                        <path d="M12 2v2m0 16v2M2 12h2m16 0h2"/>
+                    </svg>
+                </span>
+                Gear
+            </a>
+
+            <div class="pt-3 pb-1.5 px-3">
+                <span class="text-[9px] font-bold text-slate-700 uppercase tracking-[0.18em]">Competitions</span>
+            </div>
+
+            <!-- Tournaments -->
+            <a href="{{ url_for('tournaments_index') }}"
+               class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                      {% if request.path.startswith('/tournaments') %}nav-active{% else %}nav-inactive{% endif %}">
+                <span class="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 {% if request.path.startswith('/tournaments') %}text-purple-300{% else %}text-slate-600 group-hover:text-slate-400{% endif %}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </span>
+                Tournaments
+            </a>
+
+            <!-- Match Results -->
+            <a href="{{ url_for('results_index') }}"
+               class="nav-link group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                      {% if request.path.startswith('/results') %}nav-active{% else %}nav-inactive{% endif %}">
+                <span class="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 {% if request.path.startswith('/results') %}text-purple-300{% else %}text-slate-600 group-hover:text-slate-400{% endif %}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path d="M18 20V10M12 20V4M6 20v-6"/>
+                    </svg>
+                </span>
+                Match Results
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="px-4 py-4 border-t border-purple-900/20">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
+                <span class="text-[10px] font-semibold text-emerald-500/80 tracking-widest uppercase">System Online</span>
+            </div>
+            <p class="text-[10px] text-slate-700 leading-relaxed">CS104 &mdash; E-Sports Manager</p>
+        </div>
+    </aside>
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <div class="flex-1 flex flex-col ml-64 min-h-screen">
+
+        <!-- Top bar -->
+        <header class="bg-[#09091e]/90 backdrop-blur-md border-b border-purple-900/20 px-6 py-3.5 flex items-center justify-between sticky top-0 z-20">
+            <div>
+                <h1 class="font-display text-xl font-bold text-white tracking-wide leading-tight">{% block page_title %}Dashboard{% endblock %}</h1>
+                <p class="text-[11px] text-slate-600 mt-0.5 font-medium tracking-wide">E-Sports Team Management System</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold px-3 py-1.5 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    System Online
+                </div>
+            </div>
+        </header>
+
+        <!-- Flash messages -->
+        <div class="px-6 pt-4 space-y-2">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flex items-center gap-3 px-4 py-3.5 rounded-xl border text-sm font-medium
+                            {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/25 text-emerald-300
+                            {% else %}bg-red-500/10 border-red-500/25 text-red-300{% endif %}">
+                            {% if category == 'success' %}
+                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            {% else %}
+                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="12"/>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                </svg>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Page content -->
+        <main class="flex-1 px-6 py-6">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-purple-900/15 px-6 py-4">
+            <p class="text-[11px] text-slate-700 text-center tracking-wide">
+                CS104 Introduction to Database &nbsp;&bull;&nbsp; E-Sports Manager System &nbsp;&bull;&nbsp; Built with Flask + SQLite
+            </p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

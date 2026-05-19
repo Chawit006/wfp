@@ -1,0 +1,87 @@
+{% extends 'public/layout.html' %}
+{% block title %}Players{% endblock %}
+
+{% block content %}
+<div class="pub-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+  <!-- Header -->
+  <div class="mb-10">
+    <div class="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.25em] mb-2">KDA Leaders</div>
+    <h1 class="font-display font-bold text-4xl sm:text-5xl text-white tracking-tight">Pro Players</h1>
+    <p class="text-slate-500 text-sm mt-2">{{ players|length }} professional players</p>
+  </div>
+
+  <!-- Filters -->
+  <form method="GET" action="{{ url_for('pub_players') }}" class="flex flex-wrap gap-3 mb-8">
+    <div class="relative flex-1 min-w-48 max-w-sm">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" name="q" value="{{ q }}" placeholder="Search players..."
+             class="w-full bg-[#111130] border border-purple-900/30 text-slate-100 placeholder-slate-600 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/15 transition-all">
+    </div>
+    <select name="team_id"
+            class="bg-[#111130] border border-purple-900/30 text-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500/60 transition-all">
+      <option value="">All Teams</option>
+      {% for t in all_teams %}
+        <option value="{{ t['id'] }}" {% if team_id == t['id']|string %}selected{% endif %}>{{ t['name'] }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all">Filter</button>
+    {% if q or team_id %}
+    <a href="{{ url_for('pub_players') }}" class="flex items-center gap-1 bg-white/5 border border-white/8 text-slate-400 hover:text-slate-200 text-sm px-4 py-2.5 rounded-xl transition-all">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+      Clear
+    </a>
+    {% endif %}
+  </form>
+
+  <!-- Players Grid -->
+  {% if players %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for player in players %}
+    <a href="{{ url_for('pub_player', player_id=player['id']) }}"
+       class="group block bg-[#0d0d24] border border-purple-900/20 rounded-2xl p-5 card-glow-cyan transition-all duration-200">
+
+      <div class="flex items-center gap-4 mb-4">
+        <!-- Avatar -->
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-700/40 to-blue-900/40 border-2 border-cyan-500/20 flex items-center justify-center flex-shrink-0 overflow-hidden group-hover:border-cyan-500/50 transition-all">
+          <img src="/static/images/players/{{ player['name']|lower|replace(' ','-') }}.png"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+               class="w-full h-full object-cover rounded-full" alt="{{ player['name'] }}">
+          <span class="hidden w-full h-full items-center justify-center font-display font-bold text-lg text-cyan-300">
+            {{ player['name'][:2]|upper }}
+          </span>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-slate-100 group-hover:text-cyan-200 transition-colors leading-tight truncate">{{ player['name'] }}</h3>
+          <div class="text-xs text-slate-500 truncate mt-0.5">{{ player['team_name'] or 'Free Agent' }}</div>
+          <span class="mt-1.5 inline-block text-xs text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full">{{ player['role'] }}</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 gap-3 pt-4 border-t border-purple-900/15">
+        <div>
+          <div class="text-[10px] text-slate-600 uppercase tracking-widest mb-0.5">KDA</div>
+          <div class="font-display font-bold text-xl text-cyan-400 leading-none">{{ player['kda'] }}</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-600 uppercase tracking-widest mb-0.5">Age</div>
+          <div class="font-display font-bold text-xl text-slate-300 leading-none">{{ player['age'] }}</div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-24">
+    <div class="w-20 h-20 rounded-3xl bg-cyan-900/20 border border-cyan-900/30 flex items-center justify-center mx-auto mb-5">
+      <svg class="w-8 h-8 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <p class="text-slate-500 text-base">No players found.</p>
+    {% if q or team_id %}<a href="{{ url_for('pub_players') }}" class="mt-2 block text-sm text-purple-400 hover:text-purple-300">Clear filters</a>{% endif %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

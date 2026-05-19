@@ -1,0 +1,268 @@
+{% extends 'layout.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- ============================================================
+     STAT CARDS ROW
+============================================================ -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-6">
+
+    <!-- Total Teams -->
+    <div class="stat-card p-6 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600/30 to-purple-800/30 border border-purple-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+        </div>
+        <div class="min-w-0">
+            <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-[0.14em] mb-0.5">Total Teams</p>
+            <p class="text-3xl font-bold font-display text-purple-400 leading-none">{{ total_teams }}</p>
+        </div>
+    </div>
+
+    <!-- Total Players -->
+    <div class="stat-card p-6 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600/30 to-cyan-800/30 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        </div>
+        <div class="min-w-0">
+            <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-[0.14em] mb-0.5">Total Players</p>
+            <p class="text-3xl font-bold font-display text-cyan-400 leading-none">{{ total_players }}</p>
+        </div>
+    </div>
+
+    <!-- Total Tournaments -->
+    <div class="stat-card p-6 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-600/30 to-yellow-800/30 border border-yellow-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+        </div>
+        <div class="min-w-0">
+            <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-[0.14em] mb-0.5">Tournaments</p>
+            <p class="text-3xl font-bold font-display text-yellow-400 leading-none">{{ total_tournaments }}</p>
+        </div>
+    </div>
+
+    <!-- Win Rate -->
+    <div class="stat-card p-6 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-600/30 to-green-800/30 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M18 20V10M12 20V4M6 20v-6"/>
+            </svg>
+        </div>
+        <div class="min-w-0">
+            <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-[0.14em] mb-0.5">Win Rate</p>
+            <p class="text-3xl font-bold font-display text-emerald-400 leading-none">{{ win_rate }}%</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     SECOND ROW: W/L/D + top team
+============================================================ -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+
+    <!-- Match Overview -->
+    <div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl p-6">
+        <h2 class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mb-5">Match Overview</h2>
+        <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="text-center bg-emerald-500/6 border border-emerald-500/12 rounded-xl py-5">
+                <p class="text-4xl font-bold font-display text-emerald-400 leading-none">{{ wins }}</p>
+                <p class="text-[9px] text-slate-600 mt-2 uppercase tracking-[0.14em] font-semibold">Wins</p>
+                <span class="badge-win mt-2 inline-block">WIN</span>
+            </div>
+            <div class="text-center bg-red-500/6 border border-red-500/12 rounded-xl py-5">
+                <p class="text-4xl font-bold font-display text-red-400 leading-none">{{ losses }}</p>
+                <p class="text-[9px] text-slate-600 mt-2 uppercase tracking-[0.14em] font-semibold">Losses</p>
+                <span class="badge-loss mt-2 inline-block">LOSS</span>
+            </div>
+            <div class="text-center bg-amber-500/6 border border-amber-500/12 rounded-xl py-5">
+                <p class="text-4xl font-bold font-display text-amber-400 leading-none">{{ draws }}</p>
+                <p class="text-[9px] text-slate-600 mt-2 uppercase tracking-[0.14em] font-semibold">Draws</p>
+                <span class="badge-draw mt-2 inline-block">DRAW</span>
+            </div>
+        </div>
+        <div class="pt-4 border-t border-purple-900/15">
+            <div class="flex justify-between items-center text-sm mb-2">
+                <span class="text-slate-500 text-xs">Overall Win Rate</span>
+                <span class="font-bold font-display {% if win_rate >= 60 %}text-emerald-400{% elif win_rate >= 40 %}text-amber-400{% else %}text-red-400{% endif %}">{{ win_rate }}%</span>
+            </div>
+            <div class="win-bar-track">
+                <div class="win-bar-fill {% if win_rate >= 60 %}win-bar-high{% elif win_rate >= 40 %}win-bar-mid{% else %}win-bar-low{% endif %}"
+                     style="width: {{ win_rate }}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-600 mt-2">
+                <span>Total played: <span class="text-slate-400 font-semibold">{{ total_matches }}</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Ranked Team -->
+    <div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl p-6">
+        <h2 class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mb-5">Top Ranked Team</h2>
+        {% if top_teams %}
+            {% set top = top_teams[0] %}
+            <div class="flex items-start gap-4">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600 to-purple-800 flex items-center justify-center flex-shrink-0 glow-accent">
+                    <span class="font-display font-bold text-xl text-white leading-none">#{{ top['ranking'] }}</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-display text-2xl font-bold text-white leading-tight truncate">{{ top['name'] }}</h3>
+                    <p class="text-sm text-purple-400 font-medium mt-0.5">{{ top['game_title'] }}</p>
+                    <div class="flex flex-wrap gap-3 mt-3">
+                        <span class="inline-flex items-center gap-1.5 text-xs text-slate-400">
+                            <svg class="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                            <span class="text-slate-300 font-medium">{{ top['country'] }}</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 text-xs text-slate-400">
+                            <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span class="text-emerald-400 font-bold">{{ top['wins'] or 0 }}</span> wins
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 text-xs text-slate-400">
+                            <svg class="w-3 h-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            <span class="text-cyan-400 font-bold">{{ top['player_count'] }}</span> players
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('teams_index') }}" class="mt-5 flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 transition-colors font-medium">
+                View all teams
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        {% else %}
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="w-14 h-14 rounded-2xl bg-purple-900/20 border border-purple-900/30 flex items-center justify-center mb-3">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <p class="text-slate-500 text-sm">No teams yet.</p>
+                <a href="{{ url_for('teams_create') }}" class="mt-2 text-xs text-purple-400 hover:text-purple-300 font-medium transition-colors">Add your first team &rarr;</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ============================================================
+     TOP 5 TEAMS RANKINGS TABLE
+============================================================ -->
+<div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl overflow-hidden mb-6">
+    <div class="px-6 py-4 border-b border-purple-900/15 bg-[#0a0a1e] flex items-center justify-between">
+        <h2 class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Top 5 Teams by Ranking
+        </h2>
+        <a href="{{ url_for('teams_index') }}" class="text-xs text-purple-400 hover:text-purple-300 transition-colors font-medium flex items-center gap-1">
+            View all <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-purple-900/15 bg-[#080819]">
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Rank</th>
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Team</th>
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Game</th>
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Country</th>
+                    <th class="px-6 py-3.5 text-center text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">W</th>
+                    <th class="px-6 py-3.5 text-center text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">L</th>
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Win Rate</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-purple-900/10">
+                {% for team in top_teams %}
+                    {% set total_t = (team['wins'] or 0) + (team['losses'] or 0) %}
+                    {% set wr = ((team['wins'] or 0) / total_t * 100) | round(1) if total_t > 0 else 0 %}
+                    <tr class="table-row transition-colors">
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold
+                                {% if loop.index == 1 %}rank-gold
+                                {% elif loop.index == 2 %}rank-silver
+                                {% elif loop.index == 3 %}rank-bronze
+                                {% else %}rank-plain{% endif %}">
+                                {{ team['ranking'] }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-slate-100">{{ team['name'] }}</td>
+                        <td class="px-6 py-4 text-slate-400 text-xs">{{ team['game_title'] }}</td>
+                        <td class="px-6 py-4 text-slate-400 text-xs">{{ team['country'] }}</td>
+                        <td class="px-6 py-4 text-center text-emerald-400 font-bold font-display">{{ team['wins'] or 0 }}</td>
+                        <td class="px-6 py-4 text-center text-red-400 font-bold font-display">{{ team['losses'] or 0 }}</td>
+                        <td class="px-6 py-4 min-w-[100px]">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold font-display w-10 {% if wr >= 60 %}text-emerald-400{% elif wr >= 40 %}text-amber-400{% else %}text-red-400{% endif %}">{{ wr }}%</span>
+                                <div class="win-bar-track flex-1">
+                                    <div class="win-bar-fill {% if wr >= 60 %}win-bar-high{% elif wr >= 40 %}win-bar-mid{% else %}win-bar-low{% endif %}"
+                                         style="width: {{ wr | string }}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-10 text-center text-slate-600 text-sm">No teams found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ============================================================
+     RECENT MATCHES TABLE
+============================================================ -->
+<div class="bg-[#0d0d24] border border-purple-900/15 rounded-xl overflow-hidden">
+    <div class="px-6 py-4 border-b border-purple-900/15 bg-[#0a0a1e] flex items-center justify-between">
+        <h2 class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Recent Match Results
+        </h2>
+        <a href="{{ url_for('results_index') }}" class="text-xs text-purple-400 hover:text-purple-300 transition-colors font-medium flex items-center gap-1">
+            View all <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-purple-900/15 bg-[#080819]">
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Date</th>
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Team</th>
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">vs Opponent</th>
+                    <th class="px-6 py-3.5 text-left text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Tournament</th>
+                    <th class="px-6 py-3.5 text-center text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Result</th>
+                    <th class="px-6 py-3.5 text-center text-[10px] uppercase tracking-[0.12em] text-slate-600 font-semibold">Score</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-purple-900/10">
+                {% for m in recent_matches %}
+                    <tr class="table-row transition-colors">
+                        <td class="px-6 py-3.5 text-slate-500 text-xs whitespace-nowrap font-mono">{{ m['match_date'] }}</td>
+                        <td class="px-6 py-3.5 font-semibold text-slate-100">{{ m['team_name'] }}</td>
+                        <td class="px-6 py-3.5 text-slate-300">{{ m['opponent'] }}</td>
+                        <td class="px-6 py-3.5 text-slate-500 text-xs max-w-[180px] truncate">{{ m['tournament_name'] }}</td>
+                        <td class="px-6 py-3.5 text-center">
+                            <span class="{% if m['result'] == 'WIN' %}badge-win{% elif m['result'] == 'LOSS' %}badge-loss{% else %}badge-draw{% endif %}">
+                                {{ m['result'] }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-3.5 text-center font-mono text-slate-300 font-semibold">{{ m['score'] }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-slate-600 text-sm">No match results yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
